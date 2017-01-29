@@ -1,0 +1,5 @@
+Cyber Security Base: Project 1
+
+Web application for signing up to an event
+
+Baseline functionality: add signup (name + address): after signing up, view "done" page
