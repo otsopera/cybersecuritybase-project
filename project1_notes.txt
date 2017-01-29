@@ -7,3 +7,12 @@ Baseline functionality: add signup (name + address): after signing up, view "don
 Plan: add A3 xss, A8 csfr (incl. A5 security misconfig), A6 sensitive data exposure?, A7 function level access control 
 
 Added A7: missing function level access control. Link to view all participants is only visible when logged in, but by going directly to localhost:8080/signups one can view these, withoutbeing logged in as admin. I think this also constitutes A6: sensitive data exposure as you can get hold of names and addresses. Other way to get to A6: admin password is short and in the top10000, so easy to crack
+
+Fix A7: uncomment line //.antMatchers("/signUps/**").authenticated() in security  configuration
+Fix A6: change admin password to something more sensible. Come up with a sensible passwd, bcrypt hash it (https://www.dailycred.com/article/bcrypt-calculator) using 10 rounds, and insert it to custom user details configuration as the admin password
+
+Add A8: CSFR (incl. A5: security misconfiguration)
+	security misconfiguration: CSFR protection is disabled (for some strange reason:O)
+	Enables CSFR: deleting participants 
+
+	

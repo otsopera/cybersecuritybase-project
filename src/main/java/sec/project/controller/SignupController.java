@@ -3,6 +3,7 @@ package sec.project.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,14 +43,14 @@ public class SignupController {
         return "signUps";
     }
 
-    
-    public String list(Model model) {
-        model.addAttribute("items", itemRepository.findAll());
-        model.addAttribute("comments", commentRepository.findAll());
-        
-//        List<String> comments = new ArrayList<String>();
-//        comments.add("Example");
-//        model.addAttribute("comments", comments);
-        return "items";
+    @RequestMapping(value = "/signUps/deleteAll", method = RequestMethod.GET)
+    public String deleteAll() {
+        //signupRepository.delete(id);
+        System.out.println("Try delete stuff");
+        signupRepository.deleteAll();
+        System.out.println("Did it work?");
+        return "signUps";
     }
+    
+    
 }
