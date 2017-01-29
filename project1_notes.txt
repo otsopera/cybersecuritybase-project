@@ -15,4 +15,4 @@ Add A8: CSFR (incl. A5: security misconfiguration)
 	security misconfiguration: CSFR protection is disabled (for some strange reason:O)
 	Enables CSFR: deleting participants 
 
-	
+Add A3: xss. Change signups page so that signup name and address are shown unsanitized (change th:text to th:utext). Still, cookies are htmlOnly, so can't access those. This means that xss and CSFR are still pretty useless, as CSFR attacks can't get hold of cookies

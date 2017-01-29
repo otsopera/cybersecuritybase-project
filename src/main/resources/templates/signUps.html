@@ -11,7 +11,7 @@
 
         <ul>
             <li th:each="signup : ${signups}">
-                <span th:text="${signup.name}">item</span> (<span th:text="${signup.address}">999</span>)
+                <span th:utext="${signup.name}">item</span> (<span th:utext="${signup.address}">999</span>)
                 
             </li>
         </ul>
