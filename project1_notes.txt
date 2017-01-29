@@ -17,12 +17,6 @@ Add A8: CSFR (incl. A5: security misconfiguration)
 
 Add A3: xss. Change signups page so that signup name and address are shown unsanitized (change th:text to th:utext). Still, cookies are htmlOnly, so can't access those. This means that xss and CSFR are still pretty useless, as CSFR attacks can't get hold of cookies
 
-
-
-
-
-
-
 At the moment enabled are: 
 A3, XSS
 A7, missing function level access control
@@ -31,6 +25,12 @@ A8, CSFR
 A5, security misconfiguration
 A6, sensitive data exposure (two ways)
 
+
+
+
+
+Find the project at https://github.com/otsopera/cybersecuritybase-project
+Project is based on the project template.
 
 Project has the functionality to sign up to an event by providing name and address. Additionally, the project has some "administrative" features. For example, an administrator can view all sign ups and delete them. The project has numerous vulernabilities. 
 
@@ -47,20 +47,24 @@ Vulernabilities, how to exploit them, and how to fix them:
 A7, missing function level access control. The page has a login possibility for administrators: you can only get to admin page once authenticated. From the admin page, there are links to various administrative tasks (at the moment only to view all signed up participants and delete all signups). The admin page itself requires authentication, but the page for viewing sign-ins does not. 
 	How to discover: once you have set up ZAP and connected to localhost, you should see the connection request in zap. Right click on the request, choose attack, and then choose spider. This will attempt to map out the web application: you should see somewhere in the spider output site "localhost:8080/signUps". Try to write this address to the browser address bar: you will be able to get to the page, even though it is only meant for authorized admins. You can also delete participants from this page.
 
-	Solution: in the securityConfiguration.java, after the line "http.authorizeRequests()", uncomment the line "//.antMatchers("/signUps/**").authenticated()". Now trying to get to signUps, or any subsites such as the deleteAll page, requires authentication.
+	Solution: in the securityConfiguration.java, after the line "http.authorizeRequests()", uncomment the line "//.antMatchers("/signUps/**").authenticated()". Now trying to get to signUps, or any subsites such as the deleteAll page, requires authentication. You could also move the signUps totally under the admin pages (so that the address would be localhost:8080/admin/signUps). If all admin things would be under the admin tree, we would only need to add /admin/ and its subpages to the authentication list.
 
 
 Vulernability A3, XSS. In the landing page of the web application, sign up, with javascript code (such as <script>alert("BOO");</script>) as either name or address. Could even have javascript in both. When someone views the sign-ups (at localhost:8080/signUps, anyone can do this unless you fixed it in the last step), javascript is executed
-	Solution: the text viewed in signups page is unsanitized. In the signUps.html, when signups are listed, change the code from <span th:utext(...) to <span th:text(...). This this sanitizes the text, and javascript is not executed. PROBLEM with this: cookies are tagged as HTML only, so javascript cannot access them. This weakens the attack.
+	Solution: the text viewed in signups page is unsanitized. In the signUps.html, when signups are listed, change the code from <span th:utext(...) to <span th:text(...), for both name and address. This this sanitizes the text, and javascript is not executed. PROBLEM with this: cookies are tagged as HTML only, so javascript cannot access them. This weakens the attack.
 
 
 A8, CSRF. Get an authenticated user to load "http://localhost:8080/signUps/deleteAll" in any way you want, such as malicious online picture in an e-mail. (For now just enter it to the browser address bar). This deletes all sign-ups, if there are any. 
 	Solution: csrf protection is deliberately disabled in the SecurityConfiguration.java, with the line "http.csrf().disable();". Comment this line, and a csrf token will be added to all requests: without this token, the request won't go through. 
 
-A6, sensitive data exposure. Before fixing the missing function level access control flaw, anyone can get their hands on the list of registered participants. Even after that flaw is fixed, the admin password is a weak one. One might try to login with username admin, and password admin> in this case, this will let you in. Otherwise you could try a few likely admin account names and top10000 passwords, or similar, with zap. With this bad username and password, it's very easy to gain access to sensitive data (in this case names and addresses of people who have signed up). 
-	Solution: To fix this, change the admin username and password in CustomUserDetailsService.java. Username you can change right away: for the parrword you need to give a bcrypt hash (for this purpose, you can generate one online: https://www.dailycred.com/article/bcrypt-calculator). Otherwise I wouldn't send passwords to random online services. After chaging the username and password for the admin account, and fixing the earlier flaws, it's much harder to get hold of any sensitive data.
+A6, sensitive data exposure. Before fixing the missing function level access control flaw, anyone can get their hands on the list of registered participants. Even after that flaw is fixed, the admin password is a weak one. One might try to login with username admin, and password admin: in this case, this will let you in. Otherwise you could try a few likely admin account names and top10000 passwords, or similar, with zap. With this bad username and password, it's very easy to gain access to sensitive data (in this case names and addresses of people who have signed up). 
+	Solution: To fix this, change the admin username and password in CustomUserDetailsService.java. Username you can change right away: for the parrword you need to give a bcrypt hash (for this purpose, you can generate one online: https://www.dailycred.com/article/bcrypt-calculator). Otherwise I wouldn't send passwords to random online services. After chaging the username and password for the admin account, and fixing the earlier flaws, it's much harder to get hold of any sensitive data. Of course, in a finalised application, there would be an easier way for changing the password (and the passwords would be stored somewhere else than the application source code).
 
 A5, security misconfiguration. The deliberate disabling of CSRF tokens is a clear security misconfiguration. The weak admin password could also be considered one(?). Change these as earlier described.
+
+
+ 
+
 
 
 
