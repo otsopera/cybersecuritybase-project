@@ -3,3 +3,5 @@ Cyber Security Base: Project 1
 Web application for signing up to an event
 
 Baseline functionality: add signup (name + address): after signing up, view "done" page
+
+Plan: add A3 xss, A8 csfr (incl. A5 security misconfig), A6 sensitive data exposure?, A7 function level access control 
