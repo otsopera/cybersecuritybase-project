@@ -45,10 +45,7 @@ public class SignupController {
 
     @RequestMapping(value = "/signUps/deleteAll", method = RequestMethod.GET)
     public String deleteAll() {
-        //signupRepository.delete(id);
-        System.out.println("Try delete stuff");
         signupRepository.deleteAll();
-        System.out.println("Did it work?");
         return "signUps";
     }
     

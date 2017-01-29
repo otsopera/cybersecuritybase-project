@@ -22,14 +22,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         
         http.csrf().disable();
-        // no real security at the moment
-        //http.authorizeRequests()
-        //        .anyRequest().permitAll();
         http.authorizeRequests()
-                //.anyRequest().permitAll()
                 .antMatchers("/admin/**").authenticated()
                 .antMatchers("/h2-console/*").permitAll()
-                //.antMatchers("/signUps/**").authenticated()
+                .antMatchers("/signUps/**").authenticated()
                 .anyRequest().permitAll();
         http.formLogin()
                 .permitAll();
